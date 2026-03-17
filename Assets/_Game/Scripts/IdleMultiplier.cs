@@ -1,0 +1,30 @@
+using UnityEngine;
+
+public class IdleMultiplier : MonoBehaviour, IUpgrade
+{
+    [field: SerializeField] public string Name {get; private set;}
+    [field: SerializeField] public float Cost {get; private set;}
+    [field: SerializeField] public string Description {get; private set;}
+
+    [SerializeField] private float _idleMultiplierAmount; // El factor por el cual se multiplicará la energía pasiva
+
+    public void ApplyUpgrade()
+    {
+
+        bool upgradeApplied = GameManager.Instance.AddIdleMutliplier(_idleMultiplierAmount, Cost);
+        // Metodo para aplicar el upgrade de multiplicador de energía pasiva
+        
+        // El bool upgradeApplied se utiliza para verificar si el upgrade se aplicó correctamente, es decir, si el jugador tenía suficiente energía para comprarlo.
+        if(upgradeApplied)
+        {
+            // Si el upgrade se aplicó correctamente, aumentamos el costo del upgrade para la siguiente compra.
+            Cost *= 1.15f; // Aumentamos el costo del upgrade para la siguiente compra
+            Debug.Log("Idle Multiplier Upgrade Applied!" + Cost);
+        }
+        else
+        {
+            // Si no hay suficiente energía para pagar el costo del upgrade, no se aplica y se puede mostrar un mensaje de error o simplemente no hacer nada.
+            Debug.Log("Not enough energy to apply Idle Multiplier Upgrade.");
+        }
+    }
+}
