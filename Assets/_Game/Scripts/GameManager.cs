@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     // Propiedad para acceder y modificar la energía
     public float Energy
     {
+        // El getter devuelve el valor actual de la energía, mientras que el setter permite modificar la energía pero con una protección para evitar valores negativos.
         get { return _energy; }
         set
         {
