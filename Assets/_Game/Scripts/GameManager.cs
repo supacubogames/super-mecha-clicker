@@ -27,6 +27,15 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private bool _isEnabledIdleMultiplier; //Verifica si el upgrade de multiplicador de energía pasiva está habilitado o no
 
+    [SerializeField]
+    private GameObject floatingTextPrefab; // Prefab del texto flotante para mostrar la cantidad de energía ganada por segundo (idle energy)
+
+    [SerializeField]
+    private Transform canvasTransform; // Referencia al transform del canvas para instanciar el texto flotante como hijo del canvas
+
+    [SerializeField]
+    private Transform _cubeTransform; // Referencia al transform del cubo para posicionar el texto flotante sobre el cubo
+
     // 3. EVENTOS (Las señales de radio que otras clases pueden escuchar)
 
     // Evento que se dispara cuando la energía cambia. Esto permite que otras clases se enteren de los cambios en la energía.
@@ -69,6 +78,8 @@ public class GameManager : MonoBehaviour
         // el cual recibe el valor de energía para actualizar la UI. El event constantemente revisa si el valor
         // de energía ha cambiado, y si es así, llama a UpdateEnergyUI con el nuevo valor de energía.
         OnEnergyChanged?.Invoke(Energy);
+
+        ShowFloatingText(amount * _multiplier); // Llamamos al método para mostrar el texto flotante cada vez que se agrega energía (ya sea por clics o por energía pasiva).
 
         // C. (Opcional) Un log para nosotros mismos
         Debug.Log($"[GameManager] Energía actual: {Energy}");
@@ -136,13 +147,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Método para mostrar el texto flotante de energía para ser llamado desde el AddEnergy y desde la corrutina de energía pasiva (idle energy).
+    private void ShowFloatingText(float amount)
+    {
+        // Convierte la posición del cubo en el mundo a una posición en la pantalla (coordenadas de píxeles) para colocar el texto flotante correctamente.
+        var cubePos = Camera.main.WorldToScreenPoint(_cubeTransform.position);
+
+        // Se crea una variable para almacenar la instancia del texto flotante que se va a crear. 
+        // Se utiliza el método Instantiate para crear una nueva instancia del prefab de texto flotante en la posición calculada (cubePos)
+        // y con una rotación por defecto (Quaternion.identity). Además, se establece el canvas como el padre del texto flotante para que
+        // se renderice correctamente en la UI.
+        var floatingText = Instantiate(floatingTextPrefab, cubePos, Quaternion.identity, canvasTransform);
+        
+        // Llama al método SetText del script FloatingText para establecer el texto que mostrará el monto de energía ganada.
+        floatingText.GetComponent<FloatingText>().SetText("+" + amount.ToString());
+    }
+
     private IEnumerator IdleEnergyCoroutine()
     {
         while (_isEnabledIdleMultiplier)
         {
             yield return new WaitForSeconds(1f); // Espera 1 segundo
             Energy += _idleEnergyMultiplierAmount; // Agrega 1 de energía cada segundo
-            OnEnergyChanged?.Invoke(Energy); // Notifica a los oyentes del cambio de energía    
+            OnEnergyChanged?.Invoke(Energy); // Notifica a los oyentes del cambio de energía
+            ShowFloatingText(_idleEnergyMultiplierAmount); // Muestra el texto flotante cada vez que se agrega energía pasiva    
         }
     }
 }
