@@ -504,6 +504,9 @@ MonoBehaviour:
   _energy: 0
   _multiplier: 1
   _isEnabledIdleMultiplier: 0
+  floatingTextPrefab: {fileID: 7534492533261790916, guid: 1c15405a6231146e18683be76e15f13a, type: 3}
+  canvasTransform: {fileID: 1121274106}
+  _cubeTransform: {fileID: 2096818324}
   _idleEnergyMultiplierAmount: 1
 --- !u!4 &579800750
 Transform:
@@ -1346,7 +1349,7 @@ GameObject:
   - component: {fileID: 2096818325}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: MainButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1418,13 +1421,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096818322}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!61 &2096818325
 BoxCollider2D:
   m_ObjectHideFlags: 0

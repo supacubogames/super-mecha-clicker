@@ -4,6 +4,18 @@ using System;
 
 public class UIManager : MonoBehaviour
 {
+
+    // 1. SINGLETON (Para acceder fácilmente desde otras clases)
+    public static UIManager Instance;
+
+    // Método Awake se llama cuando la instancia del script se carga
+    private void Awake()
+    {
+        // Si no hay una instancia de la clase, asigna esta instancia. Si ya existe una, destruye el objeto duplicado.
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
     [SerializeField]
     private TextMeshProUGUI _energyText;
 
@@ -40,13 +52,14 @@ public class UIManager : MonoBehaviour
     // Dicho de forma sencilla, lo que queremos hacer cuando la energía cambie.
     // El metodo recibe el valor actual de la energía como parámetro, que se obtiene del evento. 
     // El evento, a través del GameManager, nos pasa ese valor, que viene en el float currentEnergy.
-    private void UpdateEnergyUI(float currentEnergy)
+    private void UpdateEnergyUI(double currentEnergy)
     {
         //Aqui se actualiza el texto en la UI. El formato "F0" redondea el número a 0 decimales.
         _energyText.text = "<sprite index=0> " + EnergyAmountFormatter(currentEnergy);
     }
 
-    private string EnergyAmountFormatter(double energy)
+    //Metodo para formatear la cantidad de energía en un formato más legible, utilizando sufijos para grandes números (K para miles, M para millones, etc.).
+    public string EnergyAmountFormatter(double energy)
     {
         if(energy >= 1000000000000000000000000000000000000000000d)
         {

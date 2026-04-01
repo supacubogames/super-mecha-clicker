@@ -19,13 +19,13 @@ public class ClickerButton : MonoBehaviour
         GameManager.Instance.AddEnergy(1);
 
         // Cambiamos la escala del botón para dar una sensación de "presionado".
-        gameObject.transform.localScale = new Vector3(1.5f, 1.5f);
+        gameObject.transform.localScale = new Vector3(3f, 3f);
     }
 
     void OnMouseUp()
     {
         // Volvemos a la escala original del botón cuando se suelta el mouse.
-        gameObject.transform.localScale = new Vector3(1f, 1f);
+        gameObject.transform.localScale = new Vector3(2f, 2f);
     }
 
 }

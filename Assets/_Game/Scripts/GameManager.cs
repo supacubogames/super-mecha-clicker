@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
         // Si no hay una instancia de la clase, asigna esta instancia. Si ya existe una, destruye el objeto duplicado.
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        // Carga el valor de energía guardado en PlayerPrefs al iniciar el juego, con un valor por defecto de 0 si no hay ninguno guardado.
+        Energy = PlayerPrefs.GetFloat("PlayerEnergy", 0f); 
     }
 
     // 2. CAMPOS (Variables y propiedades)
@@ -41,13 +44,14 @@ public class GameManager : MonoBehaviour
     // Evento que se dispara cuando la energía cambia. Esto permite que otras clases se enteren de los cambios en la energía.
     // En particular, este evento espera un metodo que reciba un float como parametro, que representará 
     // el nuevo valor de la energía después del cambio.
-    public event Action<float> OnEnergyChanged;
+    public event Action<double> OnEnergyChanged;
 
     // 4. PROPIEDADES (Los guardias de las variables)
     // Propiedad para acceder y modificar la energía
     public float Energy
     {
-        // El getter devuelve el valor actual de la energía, mientras que el setter permite modificar la energía pero con una protección para evitar valores negativos.
+        // El getter devuelve el valor actual de la energía, mientras que el setter permite modificar la energía pero
+        // con una protección para evitar valores negativos.
         get { return _energy; }
         set
         {
@@ -59,6 +63,7 @@ public class GameManager : MonoBehaviour
             {
                 _energy = value;
             }
+            PlayerPrefs.SetFloat("PlayerEnergy", _energy); // Guardamos el valor de energía en PlayerPrefs cada vez que se actualiza, para persistencia.
         }
     }
 
@@ -158,9 +163,9 @@ public class GameManager : MonoBehaviour
         // y con una rotación por defecto (Quaternion.identity). Además, se establece el canvas como el padre del texto flotante para que
         // se renderice correctamente en la UI.
         var floatingText = Instantiate(floatingTextPrefab, cubePos, Quaternion.identity, canvasTransform);
-        
+
         // Llama al método SetText del script FloatingText para establecer el texto que mostrará el monto de energía ganada.
-        floatingText.GetComponent<FloatingText>().SetText("+" + amount.ToString());
+        floatingText.GetComponent<FloatingText>().SetText("+" + UIManager.Instance.EnergyAmountFormatter(amount));
     }
 
     private IEnumerator IdleEnergyCoroutine()
